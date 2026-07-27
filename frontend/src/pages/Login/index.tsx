@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Login() {
 
@@ -46,7 +47,12 @@ const handleLogin=(e:React.FormEvent<HTMLFormElement>)=>{
 
         <button type="submit">Login</button>
 
-        <p>Don't have an account? Sign Up</p>
+        <p>Don't have an account?
+           <Link to="/signup">
+        Sign Up
+        </Link> </p>
+
+       
       </form>
     </div>
   );

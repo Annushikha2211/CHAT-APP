@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Signup() {
 
@@ -10,7 +11,6 @@ const [name, setName] = useState("");
 const handleSignup=(e:React.FormEvent<HTMLFormElement>)=>{
   e.preventDefault();
   
-
   if (!name || !email || !password || !confirmPassword) {
   alert("Please fill all the fields");
   return;
@@ -26,11 +26,10 @@ if (password !== confirmPassword) {
   console.log(name);
 console.log(confirmPassword);
 
-//   setEmail("");
-//   setPassword("");
+  // setEmail("");
+  // setPassword("");
 
 }
-
 
   return (
     <div>
@@ -63,7 +62,7 @@ console.log(confirmPassword);
           placeholder="Enter your password"
           onChange={(e)=>setPassword(e.target.value)} />
 
-          <label htmlFor=" confirmPassword"> Confirm Password</label>
+          <label htmlFor="confirmPassword"> Confirm Password</label>
         <input
          id="confirmPassword"
           type="password"
@@ -73,7 +72,13 @@ console.log(confirmPassword);
 
         <button type="submit">Sign Up</button>
 
-        <p>Already have an account? Login</p>
+        <p>Already have an account? 
+          
+        <Link to="/login">
+        Login
+        </Link>
+        </p>
+
       </form>
     </div>
   );
