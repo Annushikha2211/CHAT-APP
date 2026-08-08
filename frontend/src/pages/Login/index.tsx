@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import AuthLayout from "../../components/AuthLayout";
 
 function Login() {
 
 const[email,setEmail]=useState("");
 const [password, setPassword] = useState("");
 
-const handleLogin=(e:React.FormEvent<HTMLFormElement>)=>{
+const handleLogin= async (e:React.FormEvent<HTMLFormElement>)=>{
   e.preventDefault();
   
 
@@ -15,6 +17,24 @@ const handleLogin=(e:React.FormEvent<HTMLFormElement>)=>{
     return;
   }
 
+  try{
+    
+    console.log("EMAIL SENT:", email);
+console.log("PASSWORD SENT:", password);
+
+    const response=await axios.post(
+       "http://localhost:5000/api/auth/login",
+       {
+        email,
+        password,
+       }
+    );
+    console.log(response.data);
+     localStorage.setItem("token", response.data.token);
+
+    alert("Login successful");
+  
+
   console.log(email);
   console.log(password);
 
@@ -22,10 +42,20 @@ const handleLogin=(e:React.FormEvent<HTMLFormElement>)=>{
   setPassword("");
 
 }
+catch (error: any) {
+    console.log(error);
+
+    alert(error.response?.data?.message || "Login failed");
+  }
+}
+
 
 
   return (
-    <div>
+
+    <AuthLayout>
+      
+      <div>
       <h1>Welcome Back</h1>
       <form 
       onSubmit={handleLogin}>
@@ -55,6 +85,8 @@ const handleLogin=(e:React.FormEvent<HTMLFormElement>)=>{
        
       </form>
     </div>
+    </AuthLayout>
   );
-}
+
+};
 export default Login;

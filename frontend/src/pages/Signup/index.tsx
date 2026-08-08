@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import AuthLayout from "../../components/AuthLayout";
+import axios
+ from "axios";
 function Signup() {
 
 const[email,setEmail]=useState("");
@@ -8,9 +10,33 @@ const [password, setPassword] = useState("");
 const [confirmPassword, setConfirmPassword] = useState("");
 const [name, setName] = useState("");
 
-const handleSignup=(e:React.FormEvent<HTMLFormElement>)=>{
+const handleSignup= async (e:React.FormEvent<HTMLFormElement>)=>{
   e.preventDefault();
-  
+
+ try{
+
+    console.log("EMAIL SENT:", email);
+console.log("PASSWORD SENT:", password);
+
+    const response=await axios.post(
+       "http://localhost:5000/api/auth/signup",
+       {
+        name,
+        email,
+        password,
+       });
+      
+       console.log(response.data)
+
+        alert("Signup successful");
+
+} catch (error: any) {
+  console.log(error);
+
+  alert(error.response?.data?.message || "Signup failed");
+}
+};
+
   if (!name || !email || !password || !confirmPassword) {
   alert("Please fill all the fields");
   return;
@@ -19,20 +45,12 @@ const handleSignup=(e:React.FormEvent<HTMLFormElement>)=>{
 if (password !== confirmPassword) {
   alert("Passwords do not match");
   return;
-}
-
-  console.log(email);
-  console.log(password);
-  console.log(name);
-console.log(confirmPassword);
-
-  // setEmail("");
-  // setPassword("");
 
 }
 
   return (
-    <div>
+    <AuthLayout>
+      <div>
       <h1>Create Account</h1>
       <form 
       onSubmit={handleSignup}>
@@ -81,6 +99,7 @@ console.log(confirmPassword);
 
       </form>
     </div>
+    </AuthLayout>
   );
 }
 export default Signup;
