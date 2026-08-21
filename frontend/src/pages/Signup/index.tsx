@@ -1,105 +1,135 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import AuthLayout from "../../components/AuthLayout";
-import axios
- from "axios";
+import { Link,useNavigate } from "react-router-dom";
+import axios from "axios";
+
 function Signup() {
 
-const[email,setEmail]=useState("");
-const [password, setPassword] = useState("");
-const [confirmPassword, setConfirmPassword] = useState("");
-const [name, setName] = useState("");
+  const navigate=useNavigate();
 
-const handleSignup= async (e:React.FormEvent<HTMLFormElement>)=>{
-  e.preventDefault();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
 
- try{
+  const handleSignup = async (e: React.FormEvent) => {
 
-    console.log("EMAIL SENT:", email);
-console.log("PASSWORD SENT:", password);
+    e.preventDefault();
 
-    const response=await axios.post(
-       "http://localhost:5000/api/auth/signup",
-       {
-        name,
-        email,
-        password,
-       });
-      
-       console.log(response.data)
+  
+    // 1. Check all fields
+    if (!name || !email || !password || !confirmPassword) {
+      alert("Please fill all the fields");
+      return;
+    }
 
-        alert("Signup successful");
+    // 2. Check password
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
-} catch (error: any) {
-  console.log(error);
+    // 3. Send data to backend
+    try {
 
-  alert(error.response?.data?.message || "Signup failed");
-}
-};
+      console.log("EMAIL SENT:", email);
 
-  if (!name || !email || !password || !confirmPassword) {
-  alert("Please fill all the fields");
-  return;
-}
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/signup",
+        {
+          name,
+          email,
+          password,
+        }
+      );
 
-if (password !== confirmPassword) {
-  alert("Passwords do not match");
-  return;
+      console.log(response.data);
 
-}
+      navigate("/verify-otp", {
+  state: { email },
+});
+
+      navigate("/login");
+
+    } catch (error: any) {
+
+      console.log(error);
+
+      alert(
+        error.response?.data?.message || "Signup failed"
+      );
+    }
+  };
 
   return (
-    <AuthLayout>
-      <div>
+    <div>
+
       <h1>Create Account</h1>
-      <form 
-      onSubmit={handleSignup}>
 
-<label htmlFor="name">Name</label>
+      <form onSubmit={handleSignup}>
+
+        <label htmlFor="name">
+          Name
+        </label>
+
         <input
-         id="name" 
-         type="text" 
-         value={name}
-         placeholder="Enter your Username"
-         onChange={(e)=>setName(e.target.value)} />
+          id="name"
+          type="text"
+          value={name}
+          placeholder="Enter your Username"
+          onChange={(e) => setName(e.target.value)}
+        />
 
+        <label htmlFor="email">
+          Email
+        </label>
 
-        <label htmlFor="email">Email</label>
         <input
-         id="email" 
-         type="email" 
-         value={email}
-         placeholder="Enter your email"
-         onChange={(e)=>setEmail(e.target.value)} />
+          id="email"
+          type="email"
+          value={email}
+          placeholder="Enter your email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">
+          Password
+        </label>
+
         <input
-         id="password"
+          id="password"
           type="password"
           value={password}
           placeholder="Enter your password"
-          onChange={(e)=>setPassword(e.target.value)} />
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-          <label htmlFor="confirmPassword"> Confirm Password</label>
+        <label htmlFor="confirmPassword">
+          Confirm Password
+        </label>
+
         <input
-         id="confirmPassword"
+          id="confirmPassword"
           type="password"
           value={confirmPassword}
-          placeholder="Enter your password"
-          onChange={(e)=>setConfirmPassword(e.target.value)} />
+          placeholder="Enter your password again"
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
 
-        <button type="submit">Sign Up</button>
+        <button type="submit">
+          Sign Up
+        </button>
 
-        <p>Already have an account? 
-          
-        <Link to="/login">
-        Login
-        </Link>
+        <p>
+          Already have an account?
+          <Link to="/login">
+            Login
+          </Link>
         </p>
 
       </form>
+
     </div>
-    </AuthLayout>
   );
 }
+
 export default Signup;
