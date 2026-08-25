@@ -11,6 +11,11 @@ function VerifyOTP() {
   const email = location.state?.email;
 
   const handleVerify = async () => {
+    if (!otp) {
+      alert("Please enter OTP");
+      return;
+    }
+
     try {
       await axios.post(
         "http://localhost:5000/api/auth/verify-signup-otp",
@@ -33,9 +38,9 @@ function VerifyOTP() {
 
   return (
     <div>
-      <h1>Verify Email</h1>
+      <h1>Verify OTP</h1>
 
-      <p>OTP sent to: {email}</p>
+      <p>OTP sent to {email}</p>
 
       <input
         type="text"

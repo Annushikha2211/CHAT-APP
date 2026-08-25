@@ -1,9 +1,13 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/messages";
+const API_URL =
+  "http://localhost:5000/api/messages";
 
-export const getMessages = async (userId: string) => {
-  const token = localStorage.getItem("token");
+export const getMessages = async (
+  userId: string
+) => {
+  const token =
+    localStorage.getItem("token");
 
   const response = await axios.get(
     `${API_URL}/${userId}`,
@@ -21,7 +25,8 @@ export const sendMessage = async (
   receiver: string,
   content: string
 ) => {
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token");
 
   const response = await axios.post(
     API_URL,

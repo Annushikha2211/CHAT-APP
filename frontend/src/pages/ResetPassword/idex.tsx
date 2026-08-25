@@ -12,6 +12,11 @@ function ResetPassword() {
   const email = location.state?.email;
 
   const handleReset = async () => {
+    if (!otp || !newPassword) {
+      alert("Please fill all the fields");
+      return;
+    }
+
     try {
       await axios.post(
         "http://localhost:5000/api/auth/reset-password",

@@ -35,6 +35,9 @@ import Chat from "./pages/Chat";
 import VerifyOTP from "./pages/VerifyOTP";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword/idex";
+// import VerifyOTP from "./pages/VerifyOTP";
+// import ForgotPassword from "./pages/ForgotPassword";
+// import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (

@@ -8,6 +8,11 @@ function ForgotPassword() {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
+    if (!email) {
+      alert("Please enter your email");
+      return;
+    }
+
     try {
       await axios.post(
         "http://localhost:5000/api/auth/forgot-password",
@@ -19,7 +24,9 @@ function ForgotPassword() {
       alert("OTP sent to your email");
 
       navigate("/reset-password", {
-        state: { email },
+        state: {
+          email,
+        },
       });
     } catch (error: any) {
       alert(
