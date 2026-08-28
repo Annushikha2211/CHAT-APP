@@ -1,7 +1,47 @@
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
-const socket = io("http://localhost:5000", {
-  autoConnect: true,
-});
+let socket: Socket | null = null;
 
-export default socket;
+export const connectSocket = () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    console.log("No token found");
+    return null;
+  }
+
+  if (socket?.connected) {
+    return socket;
+  }
+
+  socket = io("http://localhost:5000", {
+    auth: {
+      token,
+    },
+  });
+
+  socket.on("connect", () => {
+    console.log("Socket connected:", socket?.id);
+  });
+
+  socket.on("connect_error", (error) => {
+    console.log("Socket connection error:", error.message);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Socket disconnected");
+  });
+
+  return socket;
+};
+
+export const getSocket = () => {
+  return socket;
+};
+
+export const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
+};

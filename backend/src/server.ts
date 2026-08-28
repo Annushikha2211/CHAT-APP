@@ -1,77 +1,60 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { createServer } from "http";
-import { Server } from "socket.io";
+import http from "http";
 
 import connectDatabase from "./config/database";
 
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import messageRoutes from "./routes/messageRoutes";
+import profileRoutes from "./routes/profileRoutes";
+import uploadRoutes from "./routes/uploadRoutes";
+import path from "path";
+
+
+
+import { initializeSocket } from "./socket/socket";
 
 dotenv.config();
 
 const app = express();
 
-const httpServer = createServer(app);
+const httpServer = http.createServer(app);
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-  },
-});
+initializeSocket(httpServer);
 
 connectDatabase();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
+app.use(
+  "/uploads",
+  express.static(path.join(process.cwd(), "uploads"))
+);
+
+app.use("/api/upload", uploadRoutes);
+
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/profile", profileRoutes);
+
+
 
 app.get("/", (req, res) => {
   res.send("Chat app server is running");
 });
 
-/* ================= SOCKET.IO ================= */
-
-io.on("connection", (socket) => {
-  console.log("🟢 User connected:", socket.id);
-
-  socket.on("join", (userId: string) => {
-    socket.join(userId);
-
-    console.log(
-      `👤 User ${userId} joined room`
-    );
-  });
-
-  socket.on("sendMessage", (message) => {
-    console.log("📨 New socket message:", message);
-
-    io.to(message.receiver).emit(
-      "receiveMessage",
-      message
-    );
-  });
-
-  socket.on("disconnect", () => {
-    console.log(
-      "🔴 User disconnected:",
-      socket.id
-    );
-  });
-});
-
-/* ============================================= */
-
 const PORT = process.env.PORT || 5000;
 
 httpServer.listen(PORT, () => {
-  console.log(
-    `🚀 Server running on port ${PORT}`
-  );
+  console.log(`Server is running on port ${PORT}`);
 });

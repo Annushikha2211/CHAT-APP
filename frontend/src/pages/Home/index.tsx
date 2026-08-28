@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUsers } from "../../service/userService";
-
+import ChatList from "../Chat/ChatListItem";
 interface User {
   _id: string;
   name: string;
@@ -150,6 +150,7 @@ function Home() {
           </div>
         )}
       </main>
+      <ChatList />
     </div>
   );
 }
