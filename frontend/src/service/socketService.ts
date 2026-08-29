@@ -13,12 +13,15 @@ export const connectSocket = () => {
   if (socket?.connected) {
     return socket;
   }
-
-  socket = io("http://localhost:5000", {
+  
+socket = io(
+  import.meta.env.VITE_SOCKET_URL,
+  {
     auth: {
       token,
     },
-  });
+  }
+);
 
   socket.on("connect", () => {
     console.log("Socket connected:", socket?.id);

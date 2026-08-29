@@ -9,6 +9,8 @@ const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
+
+
 // =========================
 // SIGNUP - SEND OTP
 // =========================
@@ -18,9 +20,9 @@ export const signup = async (
   res: Response
 ) => {
   try {
-    const { name, email, password } = req.body;
+    const { name,username, email, password } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || username || !email || !password) {
       return res.status(400).json({
         message: "Please fill all the fields",
       });
@@ -104,11 +106,18 @@ export const verifySignupOTP = async (
       });
     }
 
-    const user = await User.create({
-      name: otpRecord.name,
-      email: otpRecord.email,
-      password: otpRecord.password,
-    });
+    const generatedUsername =
+  otpRecord.email
+    .split("@")[0]
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+
+const user = await User.create({
+  name: otpRecord.name,
+  username: generatedUsername,
+  email: otpRecord.email,
+  password: otpRecord.password,
+});
 
     await OTP.deleteOne({
       _id: otpRecord._id,

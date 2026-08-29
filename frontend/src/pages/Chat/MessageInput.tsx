@@ -4,6 +4,7 @@
 import { useRef, useState } from "react";
 import { uploadFile } from "../../service/uploadService";
 import { sendMediaMessage } from "../../service/messageService";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   value: string;
@@ -25,6 +26,7 @@ function MessageInput({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showEmoji, setShowEmoji] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const navigate = useNavigate();
 
   const emojis = ["😀", "😂", "😍", "🥹", "😎", "❤️", "🔥", "👍", "🎉", "😭"];
 
@@ -83,6 +85,8 @@ function MessageInput({
                 {emoji}
               </button>
             ))}
+
+    
           </div>
         </div>
       )}
@@ -96,6 +100,7 @@ function MessageInput({
         >
           😊
         </button>
+
 
         {/* Hidden File Input */}
         <input
@@ -115,6 +120,21 @@ function MessageInput({
         >
           {uploading ? "⌛" : "📎"}
         </button>
+
+        
+       <button
+  type="button"
+  onClick={() =>
+    navigate("/cards", {
+      state: {
+        receiverId,
+      },
+    })
+  }
+  className="rounded-xl border border-[#263B2A] px-3 py-3 hover:bg-[#0E180F]"
+>
+  🎁
+</button>
 
         {/* Text Input */}
         <input

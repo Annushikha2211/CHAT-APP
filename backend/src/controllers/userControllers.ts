@@ -1,13 +1,14 @@
 
 import { Request, Response } from "express";
 import User from "../models/User";
-import {
-  AuthRequest,
-} from "../middleware/authMiddleware";
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (
+  req: Request,
+  res: Response
+) => {
   try {
-    const users = await User.find().select("-password");
+    const users = await User.find()
+      .select("-password");
 
     return res.status(200).json({
       users,
@@ -21,8 +22,38 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 };
 
+export const getUserById = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const user = await User.findById(
+      req.params.id
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      user,
+    });
+  } catch (error) {
+    console.log(
+      "Get user by id error:",
+      error
+    );
+
+    return res.status(500).json({
+      message: "Failed to fetch user",
+    });
+  }
+};
+
 export const searchUsers = async (
-  req: AuthRequest,
+  req: any,
   res: Response
 ) => {
   try {
@@ -69,7 +100,10 @@ export const searchUsers = async (
       users,
     });
   } catch (error) {
-    console.log(error);
+    console.log(
+      "Search users error:",
+      error
+    );
 
     return res.status(500).json({
       message: "Search failed",

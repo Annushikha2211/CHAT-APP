@@ -1,56 +1,67 @@
-import { useEffect, useState } from "react";
-import { getChatList } from "../../service/chatService";
-import ChatListItem from "./ChatListItem";
+import { useNavigate } from "react-router-dom";
 
-function ChatList() {
-  const [chats, setChats] = useState<any[]>([]);
-  const [loading, setLoading] =
-    useState(true);
-
-  const loadChats = async () => {
-    try {
-      const data = await getChatList();
-      setChats(data);
-    } catch (error) {
-      console.log(
-        "Chat list error:",
-        error
-      );
-    } finally {
-      setLoading(false);
-    }
+interface ChatListItemProps {
+  chat: {
+    user: {
+      _id: string;
+      name: string;
+      username?: string;
+      email?: string;
+      profileImage?: string;
+    };
+    lastMessage?: {
+      content: string;
+      createdAt: string;
+    };
+    unreadCount?: number;
   };
+}
 
-  useEffect(() => {
-    loadChats();
-  }, []);
+function ChatListItem({ chat }: ChatListItemProps) {
+  const navigate = useNavigate();
 
-  if (loading) {
-    return (
-      <div className="p-6 text-center text-[#718078]">
-        Loading chats...
-      </div>
-    );
-  }
-
-  if (chats.length === 0) {
-    return (
-      <div className="p-6 text-center text-[#718078]">
-        No chats yet.
-      </div>
-    );
-  }
+  const user = chat.user;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#18291D] bg-[#080D09]">
-      {chats.map((chat) => (
-        <ChatListItem
-          key={chat.user._id}
-        //   chat={chat}
-        />
-      ))}
-    </div>
+    <button
+      type="button"
+      onClick={() => navigate(`/chat/${user._id}`)}
+      className="flex w-full items-center gap-4 border-b border-[#18291D] p-4 text-left transition last:border-b-0 hover:bg-[#0E180F]"
+    >
+      {/* Avatar */}
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#39FF88] to-[#C7FF4D] font-bold text-black">
+        {user.name?.charAt(0).toUpperCase()}
+      </div>
+
+      {/* User information */}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="truncate font-semibold text-white">
+            {user.name}
+          </h3>
+
+          {chat.unreadCount && chat.unreadCount > 0 ? (
+            <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#39FF88] px-2 text-xs font-bold text-black">
+              {chat.unreadCount}
+            </span>
+          ) : null}
+        </div>
+
+        {user.username && (
+          <p className="truncate text-xs text-[#39FF88]">
+            @{user.username}
+          </p>
+        )}
+
+        <p className="mt-1 truncate text-sm text-[#718078]">
+          {chat.lastMessage?.content || "Start a conversation"}
+        </p>
+      </div>
+
+      {/* Arrow */}
+      <span className="text-xl text-[#506056]">→</span>
+    </button>
   );
 }
 
-export default ChatList;
+export default ChatListItem;

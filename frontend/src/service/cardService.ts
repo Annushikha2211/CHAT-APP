@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_URL =
-  "http://localhost:5000/api/cards";
+  `${import.meta.env.VITE_BASE_URL}/cards`;
 
 const getConfig = () => {
   const token = localStorage.getItem("token");
@@ -9,21 +9,20 @@ const getConfig = () => {
   return {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
   };
 };
 
-export const createCard = async (
-  data: {
-    title: string;
-    message: string;
-    template: string;
-    receiver?: string;
-  }
-) => {
+export const createCard = async (cardData: {
+  receiverId: string;
+  title: string;
+  message: string;
+  template: string;
+}) => {
   const response = await axios.post(
     API_URL,
-    data,
+    cardData,
     getConfig()
   );
 
@@ -32,7 +31,7 @@ export const createCard = async (
 
 export const getMyCards = async () => {
   const response = await axios.get(
-    `${API_URL}/my`,
+    API_URL,
     getConfig()
   );
 

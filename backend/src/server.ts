@@ -11,7 +11,8 @@ import messageRoutes from "./routes/messageRoutes";
 import profileRoutes from "./routes/profileRoutes";
 import uploadRoutes from "./routes/uploadRoutes";
 import path from "path";
-
+import cardRoutes from "./routes/cardRoutes";
+import friendRequestRoutes from "./routes/friendRequestRoutes";
 
 
 import { initializeSocket } from "./socket/socket";
@@ -26,6 +27,10 @@ initializeSocket(httpServer);
 
 connectDatabase();
 
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -38,14 +43,19 @@ app.use(
   express.static(path.join(process.cwd(), "uploads"))
 );
 
+app.use(
+  "/api/friend-requests",
+  friendRequestRoutes
+);
+
 app.use("/api/upload", uploadRoutes);
 
-app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/cards", cardRoutes);
 
 
 

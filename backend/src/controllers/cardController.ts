@@ -19,33 +19,34 @@ export const createCard = async (
       title,
       message,
       template,
-      receiver,
+      receiverId,
     } = req.body;
 
-    if (!title || !message) {
+    if (!title?.trim() || !message?.trim()) {
       return res.status(400).json({
-        message:
-          "Title and message are required",
+        message: "Title and message are required",
+      });
+    }
+
+    if (!receiverId) {
+      return res.status(400).json({
+        message: "Receiver is required",
       });
     }
 
     const card = await Card.create({
       sender: userId,
-      receiver: receiver || undefined,
-      title,
-      message,
-      template:
-        template || "birthday",
+      receiver: receiverId,
+      title: title.trim(),
+      message: message.trim(),
+      template: template || "birthday",
     });
 
     return res.status(201).json({
       card,
     });
   } catch (error) {
-    console.log(
-      "Create card error:",
-      error
-    );
+    console.log("Create card error:", error);
 
     return res.status(500).json({
       message: "Failed to create card",
@@ -69,20 +70,14 @@ export const getMyCards = async (
     const cards = await Card.find({
       sender: userId,
     })
-      .populate(
-        "receiver",
-        "name username"
-      )
+      .populate("receiver", "name username")
       .sort({ createdAt: -1 });
 
     return res.json({
       cards,
     });
   } catch (error) {
-    console.log(
-      "Get cards error:",
-      error
-    );
+    console.log("Get cards error:", error);
 
     return res.status(500).json({
       message: "Failed to get cards",

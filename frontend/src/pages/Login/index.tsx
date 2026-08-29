@@ -11,10 +11,8 @@ function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [alert, setAlert] = useState<{
-  type: "success" | "error" | "info";
-  message: string;
-} | null>(null);
+
+
 
   const handleLogin = async (
     e: React.FormEvent<HTMLFormElement>
@@ -22,24 +20,22 @@ function Login() {
     e.preventDefault();
 
     if (!email || !password) {
-      setAlert({
-  type: "error",
-  message: "Fill all the fields",
-});
+      window.alert("Fill all the fields");
       return;
     }
 
     try {
       setLoading(true);
 
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        {
-          email,
-          password,
-        }
-      );
-
+    const response = await axios.post(
+  `${import.meta.env.VITE_BASE_URL}/auth/login`,
+  
+  {
+    email,
+    password,
+  }
+);
+       
       localStorage.setItem("token", response.data.token);
 
       
@@ -51,11 +47,7 @@ function Login() {
       //     "Login failed"
       // );
 
-    setAlert({
-  type: "error",
-  
-  message: "Login failed",
-});
+  window.alert("Login failed");
     } finally {
       setLoading(false);
     }

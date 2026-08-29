@@ -1,29 +1,15 @@
-import mongoose, {
-  Schema,
-  Document,
-  Types,
-} from "mongoose";
+import mongoose from "mongoose";
 
-export interface ICard extends Document {
-  sender: Types.ObjectId;
-  receiver?: Types.ObjectId;
-  title: string;
-  message: string;
-  template: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const cardSchema = new Schema<ICard>(
+const cardSchema = new mongoose.Schema(
   {
     sender: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
 
     receiver: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: false,
     },
@@ -31,19 +17,21 @@ const cardSchema = new Schema<ICard>(
     title: {
       type: String,
       required: true,
-      trim: true,
     },
 
     message: {
       type: String,
-      required: true,
-      trim: true,
+      default: "",
     },
 
     template: {
       type: String,
-      required: true,
       default: "birthday",
+    },
+
+    imageUrl: {
+      type: String,
+      default: "",
     },
   },
   {
@@ -51,7 +39,9 @@ const cardSchema = new Schema<ICard>(
   }
 );
 
-export default mongoose.model<ICard>(
+const Card = mongoose.model(
   "Card",
   cardSchema
 );
+
+export default Card;

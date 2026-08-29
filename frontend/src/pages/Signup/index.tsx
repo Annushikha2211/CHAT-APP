@@ -14,6 +14,7 @@ function Signup() {
     useState("");
 
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState("");
 
   const [alert, setAlert] = useState<{
     type: "success" | "error" | "info";
@@ -152,6 +153,15 @@ function Signup() {
               }
               className="w-full rounded-xl border border-[#1B3020] bg-[#070C08] px-4 py-3 text-white outline-none placeholder:text-[#526057] transition focus:border-[#39FF88] focus:ring-2 focus:ring-[#39FF88]/10"
             />
+
+            <input
+  type="text"
+  value={username}
+  onChange={(e) => setUsername(e.target.value)}
+  placeholder="@username"
+  className="w-full rounded-xl border border-[#263B2A] bg-[#0B120D] px-4 py-3 text-white outline-none focus:border-[#39FF88]"
+/>
+
           </div>
 
           {/* Password */}
