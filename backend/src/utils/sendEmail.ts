@@ -1,18 +1,18 @@
-const Brevo = require("@getbrevo/brevo");
+const { TransactionalEmailsApi, SendSmtpEmail } = require("@getbrevo/brevo");
 
 export const sendOTPEmail = async (
   email: string,
   otp: string,
   type: string = "verification"
 ) => {
-  const apiInstance = new Brevo.TransactionalEmailsApi();
+  const apiInstance = new TransactionalEmailsApi();
   
   apiInstance.setApiKey(
-    Brevo.TransactionalEmailsApiApiKeys.apiKey,
+    0, // Brevo Api Key Enum index for default API key
     process.env.BREVO_API_KEY || ""
   );
 
-  const sendSmtpEmail = new Brevo.SendSmtpEmail();
+  const sendSmtpEmail = new SendSmtpEmail();
   const subject = type === "reset" ? "Password Reset OTP" : "Email Verification OTP";
 
   sendSmtpEmail.subject = subject;
