@@ -31,12 +31,21 @@ connectDatabase();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://chat-app-git-main-annushikha.vercel.app",
+  "https://chat-app-annushikha.vercel.app",
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://chat-app-eight-gilt-91.vercel.app",
-    ],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
