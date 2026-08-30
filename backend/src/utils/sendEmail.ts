@@ -7,12 +7,15 @@ console.log("EMAIL PASS EXISTS:", !!process.env.EMAIL_PASS);
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
-  secure: false, // port 587 ke liye false hi rakhein
+  secure: false, 
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  family: 4, // ENETUNREACH IPv6 issue ko fix karne ke liye IPv4 enforce karein
+  family: 4, 
+  tls: {
+    rejectUnauthorized: false,
+  },
 } as any);
 
 export default transporter;
@@ -28,7 +31,7 @@ export const sendOTPEmail = async (
       : "Chat App - Reset Password";
 
   await transporter.sendMail({
-    from: process.env.EMAIL_USER,
+    from: `Chat App <${process.env.EMAIL_USER}>`,
     to: email,
     subject: subject,
     html: `
