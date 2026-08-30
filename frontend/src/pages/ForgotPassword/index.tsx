@@ -19,10 +19,10 @@ function ForgotPassword() {
 
    await axios.post(
   `${import.meta.env.VITE_BASE_URL}/api/auth/forgot-password`,
-        {
-          email: email.trim(),
-        }
-      );
+  {
+    email: email.trim(),
+  }
+);
 
       alert("OTP sent to your email");
 

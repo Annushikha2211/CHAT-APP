@@ -25,13 +25,13 @@ function ResetPassword() {
 
     try {
   await axios.post(
-  "http://localhost:5000/api/auth/reset-password",
-        {
-          email,
-          otp,
-          newPassword,
-        }
-      );
+  `${import.meta.env.VITE_BASE_URL}/api/auth/reset-password`,
+  {
+    email,
+    otp,
+    newPassword,
+  }
+);
 
       alert("Password reset successful");
 

@@ -28,11 +28,11 @@ function VerifyOTP() {
 
      await axios.post(
   `${import.meta.env.VITE_BASE_URL}/api/auth/verify-signup-otp`,
-        {
-          email,
-          otp: otp.trim(),
-        }
-      );
+  {
+    email,
+    otp: otp.trim(),
+  }
+);;
 
       alert("Account created successfully 🎉");
 
