@@ -2,8 +2,6 @@ import dns from "dns";
 import "dotenv/config";
 dns.setDefaultResultOrder("ipv4first");
 
-// import nodemailer from "nodemailer";
-
 import nodemailer from "nodemailer";
 
 console.log("EMAIL USER:", process.env.EMAIL_USER);
@@ -18,14 +16,14 @@ console.log("EMAIL PASS EXISTS:", !!process.env.EMAIL_PASS);
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-});
+  family: 4,
+} as any);
 
 export const sendOTPEmail = async (
   email: string,
