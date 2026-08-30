@@ -5,12 +5,17 @@ console.log("EMAIL USER:", process.env.EMAIL_USER);
 console.log("EMAIL PASS EXISTS:", !!process.env.EMAIL_PASS);
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // port 587 ke liye false hi rakhein
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-});
+  family: 4, // ENETUNREACH IPv6 issue ko fix karne ke liye IPv4 enforce karein
+} as any);
+
+export default transporter;
 
 export const sendOTPEmail = async (
   email: string,
