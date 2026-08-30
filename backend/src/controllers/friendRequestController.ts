@@ -58,8 +58,7 @@ export const sendFriendRequest = async (
     if (reverseRequest) {
       if (reverseRequest.status === "pending") {
         return res.status(400).json({
-          message:
-            "This user has already sent you a request",
+          message: "This user has already sent you a request",
         });
       }
     }
@@ -75,10 +74,7 @@ export const sendFriendRequest = async (
       request,
     });
   } catch (error) {
-    console.log(
-      "Send friend request error:",
-      error
-    );
+    console.log("Send friend request error:", error);
 
     return res.status(500).json({
       message: "Failed to send friend request",
@@ -104,20 +100,19 @@ export const getReceivedRequests = async (
       receiver: userId,
       status: "pending",
     })
-      .populate(
-        "sender",
-        "name username email profileImage"
-      )
+      .populate("sender", "name username email profileImage")
       .sort({ createdAt: -1 });
 
+    // Deleted users wale pending requests ko safe filter karein
+    const validRequests = requests.filter(
+      (request) => request.sender !== null && request.sender !== undefined
+    );
+
     return res.json({
-      requests,
+      requests: validRequests,
     });
   } catch (error) {
-    console.log(
-      "Get received requests error:",
-      error
-    );
+    console.log("Get received requests error:", error);
 
     return res.status(500).json({
       message: "Failed to get requests",
@@ -161,10 +156,7 @@ export const acceptFriendRequest = async (
       request,
     });
   } catch (error) {
-    console.log(
-      "Accept friend request error:",
-      error
-    );
+    console.log("Accept friend request error:", error);
 
     return res.status(500).json({
       message: "Failed to accept request",
@@ -207,10 +199,7 @@ export const rejectFriendRequest = async (
       message: "Friend request rejected",
     });
   } catch (error) {
-    console.log(
-      "Reject friend request error:",
-      error
-    );
+    console.log("Reject friend request error:", error);
 
     return res.status(500).json({
       message: "Failed to reject request",
@@ -218,7 +207,7 @@ export const rejectFriendRequest = async (
   }
 };
 
-// GET MY FRIENDS
+// GET MY FRIENDS - PERMANENTLY FIXED
 export const getFriends = async (
   req: AuthRequest,
   res: Response
@@ -234,40 +223,28 @@ export const getFriends = async (
 
     const requests = await FriendRequest.find({
       status: "accepted",
-      $or: [
-        { sender: userId },
-        { receiver: userId },
-      ],
+      $or: [{ sender: userId }, { receiver: userId }],
     })
-      .populate(
-        "sender",
-        "name username email profileImage"
-      )
-      .populate(
-        "receiver",
-        "name username email profileImage"
-      )
+      .populate("sender", "name username email profileImage")
+      .populate("receiver", "name username email profileImage")
       .sort({ updatedAt: -1 });
 
-    const friends = requests.map((request: any) => {
-      if (
-        request.sender._id.toString() ===
-        userId
-      ) {
-        return request.receiver;
-      }
-
-      return request.sender;
-    });
+    const friends = requests
+      .map((request: any) => {
+        // Safe access: Sender ya Receiver agar null huye toh gracefully crash hone se bachayega
+        if (request.sender && request.sender._id?.toString() === userId.toString()) {
+          return request.receiver;
+        }
+        return request.sender;
+      })
+      // PERMANENT FIX: Null/Undefined items aur deleted users ko list se nikal dega
+      .filter((friend: any) => friend !== null && friend !== undefined && friend._id);
 
     return res.json({
       friends,
     });
   } catch (error) {
-    console.log(
-      "Get friends error:",
-      error
-    );
+    console.log("Get friends error:", error);
 
     return res.status(500).json({
       message: "Failed to get friends",
