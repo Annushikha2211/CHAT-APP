@@ -1,6 +1,10 @@
 import nodemailer from "nodemailer";
 
-export const sendOTPEmail = async (email: string, otp: string) => {
+export const sendOTPEmail = async (
+  email: string, 
+  otp: string, 
+  type: string = "verification"
+) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -9,13 +13,15 @@ export const sendOTPEmail = async (email: string, otp: string) => {
     },
   });
 
+  const subject = type === "reset" ? "Password Reset OTP" : "Email Verification OTP";
+
   await transporter.sendMail({
     from: `"ChatApp" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: "Your OTP Code - ChatApp",
+    subject: subject,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px;">
-        <h2>Verification Code</h2>
+        <h2>${subject}</h2>
         <p>Your OTP code is: <b style="font-size: 24px; color: #39FF88;">${otp}</b></p>
         <p>This code will expire in 10 minutes.</p>
       </div>
