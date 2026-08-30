@@ -26,8 +26,8 @@ function VerifyOTP() {
     try {
       setLoading(true);
 
-      await axios.post(
-        "http://localhost:5000/api/auth/verify-signup-otp",
+     await axios.post(
+  `${import.meta.env.VITE_BASE_URL}/api/auth/verify-signup-otp`,
         {
           email,
           otp: otp.trim(),
