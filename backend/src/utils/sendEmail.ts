@@ -6,7 +6,9 @@ export const sendOTPEmail = async (
   type: string = "verification"
 ) => {
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // Render port 465 timeout nahi hone deta
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
