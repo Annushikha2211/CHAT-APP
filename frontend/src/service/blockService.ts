@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = `${import.meta.env.VITE_BASE_URL}/blocks`;
+const API = `${import.meta.env.VITE_BASE_URL}/api/blocks`;
 
 const getConfig = () => ({
   headers: {

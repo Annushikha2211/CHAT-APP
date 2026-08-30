@@ -1,7 +1,11 @@
 import axios from "axios";
 
-const API_URL =
-  `${import.meta.env.VITE_BASE_URL}/messages`;
+// Environment variable fallback fix
+const BASE_URL = import.meta.env.VITE_BASE_URL 
+  ? import.meta.env.VITE_BASE_URL.replace(/\/$/, "") 
+  : "https://chatflow-backend-af8f.onrender.com";
+
+const API_URL = `${BASE_URL}/api/messages`;
 
 const getConfig = () => {
   const token = localStorage.getItem("token");

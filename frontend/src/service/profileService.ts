@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = `${import.meta.env.VITE_BASE_URL}/profile`;
+const API_URL = `${import.meta.env.VITE_BASE_URL}/api/profile`;
 
 const config = () => ({
   headers: {

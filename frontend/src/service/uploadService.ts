@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = `${import.meta.env.VITE_BASE_URL}/upload`;
+const API_URL = `${import.meta.env.VITE_BASE_URL}/api/upload`;
 
 export const uploadFile = async (
   file: File

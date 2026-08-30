@@ -9,11 +9,17 @@ interface OnlineUser {
 
 const onlineUsers = new Map<string, OnlineUser>();
 
-export const initializeSocket = (httpServer: HttpServer) => {
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://chat-app-git-main-annushikha.vercel.app",
+  "https://chat-app-annushikha.vercel.app",
+];
+
+export const initializeSocket = (httpServer: any) => {
   const io = new Server(httpServer, {
     cors: {
-      origin: "http://localhost:5173",
-      methods: ["GET", "POST", "PUT", "DELETE"],
+      origin: allowedOrigins,
+      credentials: true,
     },
   });
 
