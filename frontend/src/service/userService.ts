@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL =
   import.meta.env.VITE_BASE_URL
-    ? `${import.meta.env.VITE_BASE_URL}/users`
+    ? `${import.meta.env.VITE_BASE_URL}/api/users`
     : "http://localhost:5000/api/users";
 
 // ===============================
