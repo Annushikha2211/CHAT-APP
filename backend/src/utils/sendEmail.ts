@@ -1,19 +1,19 @@
 import nodemailer from "nodemailer";
 
 export const sendOTPEmail = async (
-  email: string, 
-  otp: string, 
+  email: string,
+  otp: string,
   type: string = "verification"
 ) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
-    secure: true, // Render port 465 timeout nahi hone deta
+    secure: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-  });
+  } as any);
 
   const subject = type === "reset" ? "Password Reset OTP" : "Email Verification OTP";
 
