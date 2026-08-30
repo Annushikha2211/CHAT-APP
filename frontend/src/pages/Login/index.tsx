@@ -27,13 +27,9 @@ function Login() {
     try {
       setLoading(true);
 
-    const response = await axios.post(
-  `${import.meta.env.VITE_BASE_URL}/auth/login`,
-  
-  {
-    email,
-    password,
-  }
+  const response = await axios.post(
+  `${import.meta.env.VITE_BASE_URL}/api/auth/login`,
+  { email, password }
 );
        
       localStorage.setItem("token", response.data.token);
