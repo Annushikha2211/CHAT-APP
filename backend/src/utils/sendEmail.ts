@@ -6,15 +6,14 @@ export const sendOTPEmail = async (
   type: string = "verification"
 ) => {
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // Port 465 ke liye True hona zaroori hai
     auth: {
-      user: process.env.EMAIL_USER, // madanverma2740@gmail.com
-      pass: process.env.EMAIL_PASS, // Tumhara 16-digit Gmail App Password
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
-    // Render/Cloud platforms par connection drop hone se bachane ke liye:
-    tls: {
-      rejectUnauthorized: false
-    }
+    connectionTimeout: 10000,
   });
 
   const subject = type === "reset" ? "Password Reset OTP" : "Email Verification OTP";
@@ -34,7 +33,7 @@ export const sendOTPEmail = async (
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent via Gmail SMTP:", info.response);
+    console.log("Email sent via Gmail SMTP (Port 465):", info.response);
     return info;
   } catch (error: any) {
     console.error("Gmail SMTP Error:", error);
