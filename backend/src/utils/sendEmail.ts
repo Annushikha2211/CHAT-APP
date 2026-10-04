@@ -5,9 +5,14 @@ export const sendOTPEmail = async (
   otp: string,
   type: string = "verification"
 ) => {
-  // Key ab tabhi mangi jayegi jab koi Signup button dabayega, pehle se server crash nahi hoga
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  // Render me rakha hua naam hi use kiya hai
+  const apiKey = process.env.RESEND_KEY || process.env.RESEND_API_KEY;
 
+  if (!apiKey) {
+    throw new Error("Resend API key missing in environment variables!");
+  }
+
+  const resend = new Resend(apiKey);
   const subject = type === "reset" ? "Password Reset OTP" : "Email Verification OTP";
 
   try {
@@ -24,7 +29,7 @@ export const sendOTPEmail = async (
       `,
     });
 
-    console.log("OTP Email sent via Resend:", data);
+    console.log("OTP Email sent successfully via Resend:", data);
     return data;
   } catch (error: any) {
     console.error("Resend Error:", error);
