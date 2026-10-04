@@ -6,16 +6,16 @@ export const sendOTPEmail = async (
   type: string = "verification"
 ) => {
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    // Direct IPv4 address of Gmail SMTP to completely bypass Render's IPv6 issue
+    host: "142.250.153.108", 
     port: 587,
     secure: false,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    family: 4,
-    connectionTimeout: 10000,
     tls: {
+      servername: "smtp.gmail.com", // Necessary for SSL certificate matching
       rejectUnauthorized: false,
     },
   } as nodemailer.TransportOptions);
@@ -37,7 +37,7 @@ export const sendOTPEmail = async (
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully via Gmail SMTP:", info.response);
+    console.log("Email sent via Direct IPv4 SMTP:", info.response);
     return info;
   } catch (error: any) {
     console.error("Gmail SMTP Error Details:", error);
