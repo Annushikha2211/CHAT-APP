@@ -22,7 +22,7 @@ export const signup = async (
   try {
     const { name,username, email, password } = req.body;
 
-    if (!name || username || !email || !password) {
+    if (!name || !username || !email || !password) {
       return res.status(400).json({
         message: "Please fill all the fields",
       });
