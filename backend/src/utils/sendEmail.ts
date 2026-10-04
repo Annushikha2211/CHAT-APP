@@ -6,14 +6,17 @@ export const sendOTPEmail = async (
   type: string = "verification"
 ) => {
   const transporter = nodemailer.createTransport({
+    service: "gmail",
     host: "smtp.gmail.com",
     port: 465,
-    secure: true, // Port 465 ke liye True hona zaroori hai
+    secure: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    connectionTimeout: 10000,
+    tls: {
+      rejectUnauthorized: false, // TLS verification error bypass karne ke liye
+    },
   });
 
   const subject = type === "reset" ? "Password Reset OTP" : "Email Verification OTP";
@@ -33,10 +36,10 @@ export const sendOTPEmail = async (
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent via Gmail SMTP (Port 465):", info.response);
+    console.log("Email sent via Gmail SMTP:", info.response);
     return info;
   } catch (error: any) {
-    console.error("Gmail SMTP Error:", error);
-    throw new Error("Failed to send OTP email");
+    console.error("Gmail SMTP Error Details:", error);
+    throw new Error(error.message || "Failed to send OTP email");
   }
 };
