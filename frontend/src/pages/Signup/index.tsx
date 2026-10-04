@@ -9,21 +9,18 @@ function Signup() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] =
-    useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState("");
 
   const [alert, setAlert] = useState<{
     type: "success" | "error" | "info";
     message: string;
   } | null>(null);
 
-  const handleSignup = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setAlert(null);
@@ -31,6 +28,7 @@ function Signup() {
     if (
       !name.trim() ||
       !email.trim() ||
+      !username.trim() ||
       !password.trim() ||
       !confirmPassword.trim()
     ) {
@@ -44,8 +42,7 @@ function Signup() {
     if (password.length < 6) {
       setAlert({
         type: "error",
-        message:
-          "Password must be at least 6 characters.",
+        message: "Password must be at least 6 characters.",
       });
       return;
     }
@@ -61,11 +58,12 @@ function Signup() {
     try {
       setLoading(true);
 
- const response = await axios.post(
-  `${import.meta.env.VITE_BASE_URL}/api/auth/signup`,
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/auth/signup`,
         {
           name,
           email,
+          username,
           password,
         }
       );
@@ -74,7 +72,7 @@ function Signup() {
         type: "success",
         message:
           response.data.message ||
-          "Account created successfully!",
+          "Account created successfully! Check your email for OTP.",
       });
 
       setTimeout(() => {
@@ -85,11 +83,15 @@ function Signup() {
         });
       }, 700);
     } catch (error: any) {
+      // Direct exact backend error response read karna:
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Signup failed. Failed to send OTP or user already exists.";
+
       setAlert({
         type: "error",
-        message:
-          error.response?.data?.message ||
-          "Signup failed. Please try again.",
+        message: errorMessage,
       });
     } finally {
       setLoading(false);
@@ -99,9 +101,7 @@ function Signup() {
   return (
     <AuthLayout>
       <div>
-        <h1 className="text-3xl font-bold text-white">
-          Create account
-        </h1>
+        <h1 className="text-3xl font-bold text-white">Create account</h1>
 
         <p className="mt-2 mb-7 text-[#8A9A8D]">
           Join ChatFlow and start chatting.
@@ -115,57 +115,44 @@ function Signup() {
           />
         )}
 
-        <form
-          onSubmit={handleSignup}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSignup} className="space-y-4">
           {/* Name */}
-
           <div>
-            <label className="mb-2 block text-sm text-[#B8C5BA]">
-              Name
-            </label>
+            <label className="mb-2 block text-sm text-[#B8C5BA]">Name</label>
 
             <input
               type="text"
               value={name}
               placeholder="Enter your name"
-              onChange={(e) =>
-                setName(e.target.value)
-              }
+              onChange={(e) => setName(e.target.value)}
               className="w-full rounded-xl border border-[#1B3020] bg-[#070C08] px-4 py-3 text-white outline-none placeholder:text-[#526057] transition focus:border-[#39FF88] focus:ring-2 focus:ring-[#39FF88]/10"
             />
           </div>
 
           {/* Email */}
-
           <div>
-            <label className="mb-2 block text-sm text-[#B8C5BA]">
-              Email
-            </label>
+            <label className="mb-2 block text-sm text-[#B8C5BA]">Email</label>
 
             <input
               type="email"
               value={email}
               placeholder="you@example.com"
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-              className="w-full rounded-xl border border-[#1B3020] bg-[#070C08] px-4 py-3 text-white outline-none placeholder:text-[#526057] transition focus:border-[#39FF88] focus:ring-2 focus:ring-[#39FF88]/10"
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-xl border border-[#1B3020] bg-[#070C08] px-4 py-3 text-white outline-none placeholder:text-[#526057] transition focus:border-[#39FF88] focus:ring-2 focus:ring-[#39FF88]/10 mb-3"
             />
 
-            <input
-  type="text"
-  value={username}
-  onChange={(e) => setUsername(e.target.value)}
-  placeholder="@username"
-  className="w-full rounded-xl border border-[#263B2A] bg-[#0B120D] px-4 py-3 text-white outline-none focus:border-[#39FF88]"
-/>
+            <label className="mb-2 block text-sm text-[#B8C5BA]">Username</label>
 
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="@username"
+              className="w-full rounded-xl border border-[#263B2A] bg-[#0B120D] px-4 py-3 text-white outline-none focus:border-[#39FF88]"
+            />
           </div>
 
           {/* Password */}
-
           <div>
             <label className="mb-2 block text-sm text-[#B8C5BA]">
               Password
@@ -175,15 +162,12 @@ function Signup() {
               type="password"
               value={password}
               placeholder="Minimum 6 characters"
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-xl border border-[#1B3020] bg-[#070C08] px-4 py-3 text-white outline-none placeholder:text-[#526057] transition focus:border-[#39FF88] focus:ring-2 focus:ring-[#39FF88]/10"
             />
           </div>
 
           {/* Confirm Password */}
-
           <div>
             <label className="mb-2 block text-sm text-[#B8C5BA]">
               Confirm Password
@@ -193,15 +177,12 @@ function Signup() {
               type="password"
               value={confirmPassword}
               placeholder="Confirm your password"
-              onChange={(e) =>
-                setConfirmPassword(e.target.value)
-              }
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full rounded-xl border border-[#1B3020] bg-[#070C08] px-4 py-3 text-white outline-none placeholder:text-[#526057] transition focus:border-[#39FF88] focus:ring-2 focus:ring-[#39FF88]/10"
             />
           </div>
 
           {/* Button */}
-
           <button
             type="submit"
             disabled={loading}
@@ -213,7 +194,6 @@ function Signup() {
 
         <p className="mt-6 text-center text-sm text-[#8A9A8D]">
           Already have an account?{" "}
-
           <Link
             to="/login"
             className="font-semibold text-[#39FF88] transition hover:text-[#C7FF4D]"
