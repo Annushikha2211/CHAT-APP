@@ -16,6 +16,13 @@ A full-stack chat application designed to bring messaging, voice calls, video ca
 - **Video Calls:** Communicate through video calls.
 - **File Sharing:** Send images and other supported files.
 - **Interactive Card Sharing:** Create and send custom cards within conversations.
+- 
+## Screenshots
+
+### Login Screen
+
+![Chat App Login Screen](login.png)
+
 
 ## Tech Stack
 
